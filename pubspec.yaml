@@ -38,6 +38,8 @@ dependencies:
   objectbox_flutter_libs: any
   flutter_hooks: ^0.21.2
   hooks_riverpod: ^2.6.1
+  flutter_screenutil: ^5.9.3
+  expandable: ^5.0.1
 
 dev_dependencies:
   flutter_test:
