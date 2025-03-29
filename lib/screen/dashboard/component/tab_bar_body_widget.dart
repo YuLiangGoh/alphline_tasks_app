@@ -1,21 +1,27 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task/app/app_constant.dart';
 import 'package:task/app/app_global.dart';
 import 'package:task/entity/model/task.dart';
+import 'package:task/screen/dashboard/component/tab_bar_body_ongoing_task_widget.dart';
 
-class TabBarItemWidget extends StatelessWidget {
-  const TabBarItemWidget({
+class TabBarBodyWidget extends HookWidget {
+  const TabBarBodyWidget({
     super.key,
     required this.categoryName,
     this.onGoingTaskList = const [],
     this.completedTaskList = const [],
+    this.onTaskMarkAsDone,
+    this.onTaskMarkAsNotDone,
   });
 
   final String categoryName;
   final List<Task> onGoingTaskList;
   final List<Task> completedTaskList;
+  final Function(Task task)? onTaskMarkAsDone;
+  final Function(Task task)? onTaskMarkAsNotDone;
 
   @override
   Widget build(BuildContext context) {
@@ -81,11 +87,8 @@ class TabBarItemWidget extends StatelessWidget {
                         shrinkWrap: true,
                         itemCount: onGoingTaskList.length,
                         itemBuilder: (_, index) {
-                          return ListTile(
-                            title: Text('${onGoingTaskList[index].title}'),
-                            subtitle: Text(
-                              '${onGoingTaskList[index].description}',
-                            ),
+                          return TabBarBodyOngoingTaskWidget(
+                            task: onGoingTaskList[index],
                           );
                         },
                       ),

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:task/app/app_constant.dart';
 import 'package:task/app/app_global.dart';
+import 'package:task/entity/model/task.dart';
 import 'package:task/entity/view_model/dashboard_view_model.dart';
 import 'package:task/screen/dashboard/component/add_category_bottom_sheet.dart';
 import 'package:task/screen/dashboard/component/add_task_bottom_sheet_widget.dart';
@@ -17,7 +18,29 @@ class DashboardController extends StateNotifier<DashboardViewModel> {
 
   Future<void> getCategories() async {
     final categories = await objectbox.getAllCategories();
-    state = state.copyWith(categories: categories);
+
+    if (categories.isEmpty) {
+      intializeInitialTaskCategory();
+      return;
+    }
+
+    state = state.copyWith(
+      categories: categories,
+      selectedCategory: state.selectedCategory ?? categories.first,
+    );
+  }
+
+  void intializeInitialTaskCategory() async {
+    await objectbox.addCategory('My Tasks');
+    final categories = await objectbox.getAllCategories();
+    state = state.copyWith(
+      categories: categories,
+      selectedCategory: state.selectedCategory ?? categories.first,
+    );
+  }
+
+  void setSelectedCategory(int index) {
+    state = state.copyWith(selectedCategory: state.categories[index]);
   }
 
   void onAddCategoryButtonPressed() {
@@ -63,8 +86,24 @@ class DashboardController extends StateNotifier<DashboardViewModel> {
       context: globalContext,
       builder: (_) {
         return AddTaskBottomSheetWidget(
-          onAddTaskPressed:
-              (String title, String? description, DateTime? scheduleDate) {},
+          onAddTaskPressed: (
+            String title,
+            String? description,
+            DateTime? scheduleDate,
+          ) async {
+            final task = Task(
+              title: title,
+              description: description,
+              deadlineAt: scheduleDate,
+              createdAt: DateTime.now(),
+            );
+
+            task.category.target = state.selectedCategory;
+
+            await objectbox.addTask(task);
+
+            await getCategories();
+          },
         );
       },
     );

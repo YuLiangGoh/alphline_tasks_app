@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:1476827231405608265",
-      "lastPropertyId": "12:3338093977729777580",
+      "lastPropertyId": "13:7316730955158402204",
       "name": "Task",
       "properties": [
         {
@@ -56,6 +56,11 @@
           "flags": 520,
           "indexId": "1:8644580038707151440",
           "relationTarget": "Category"
+        },
+        {
+          "id": "13:7316730955158402204",
+          "name": "createdAt",
+          "type": 10
         }
       ],
       "relations": []

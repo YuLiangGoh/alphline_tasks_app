@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
+import 'package:task/app/app_constant.dart';
 import 'package:task/app/app_global.dart';
 
 class AddTaskBottomSheetWidget extends HookWidget {
@@ -12,9 +14,9 @@ class AddTaskBottomSheetWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDescriptionShown = useState(false);
     final titleTextEditingController = useTextEditingController();
     final descriptionTextEditingController = useTextEditingController();
+    final deadlineTextEditingController = useTextEditingController();
     final selectedScheduleDate = useState<DateTime?>(null);
     return Padding(
       padding: EdgeInsets.all(
@@ -23,76 +25,99 @@ class AddTaskBottomSheetWidget extends HookWidget {
       child: Form(
         key: formKey,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
+            RichText(
+              text: TextSpan(
+                text: 'Task Name',
+                style: textStyleW600(),
+                children: [
+                  TextSpan(
+                    text: ' *',
+                    style: textStyleW400(color: AppColor.errorRed),
+                  ),
+                ],
+              ),
+            ),
+
+            gapHeight8,
             TextFormField(
               autofocus: true,
               controller: titleTextEditingController,
               decoration: InputDecoration(
-                labelText: 'Title',
-                hintText: 'Title of the task',
+                hintText: 'Task name',
                 border: OutlineInputBorder(),
               ),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Task title is required.';
+                  return 'Task name is required.';
                 }
                 return null;
               },
             ),
-            if (isDescriptionShown.value) ...[
-              gapHeight12,
-              TextFormField(
-                controller: descriptionTextEditingController,
-                decoration: InputDecoration(
-                  labelText: 'Task Description',
-                  hintText: 'Enter task description',
-                  border: OutlineInputBorder(),
-                ),
+            gapHeight12,
+            Text('Description', style: textStyleW600()),
+            gapHeight8,
+            TextFormField(
+              controller: descriptionTextEditingController,
+              decoration: InputDecoration(
+                hintText: 'Description',
+                border: OutlineInputBorder(),
               ),
-            ],
-            if (selectedScheduleDate.value != null) ...[
-              gapHeight12,
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Chip(
-                  label: Text(
-                    'Scheduled Date: ${selectedScheduleDate.value?.toLocal().toString().split(' ')[0]}',
-                    style: TextStyle(fontSize: 14.sp),
+            ),
+            gapHeight12,
+            RichText(
+              text: TextSpan(
+                text: 'Deadline',
+                style: textStyleW600(),
+                children: [
+                  TextSpan(
+                    text: ' *',
+                    style: textStyleW400(color: AppColor.errorRed),
                   ),
-                  deleteIcon: Icon(Icons.close),
-                  onDeleted: () {
-                    selectedScheduleDate.value = null;
-                  },
-                ),
+                ],
               ),
-            ],
+            ),
+            gapHeight8,
+            TextFormField(
+              readOnly: true,
+              controller: deadlineTextEditingController,
+              decoration: InputDecoration(
+                labelText: 'Deadline',
+                hintText: 'Select a date',
+                border: OutlineInputBorder(),
+              ),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              onTap: () async {
+                DateTime? dateTime = await showOmniDateTimePicker(
+                  context: context,
+                );
+                if (dateTime != null) {
+                  selectedScheduleDate.value = dateTime;
+                  deadlineTextEditingController
+                      .text = getFormattedDateTimeString(dateTime);
+                }
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Deadline date is required.';
+                }
+                return null;
+              },
+            ),
             gapHeight12,
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  onPressed: () {
-                    isDescriptionShown.value = true;
-                  },
-                  icon: Icon(Icons.description),
+                Text(
+                  '* indicates required field.',
+                  style: textStyleW400(
+                    fontSize: 12,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
-                gapWidth4,
-                IconButton(
-                  onPressed: () {
-                    showDatePicker(
-                      context: context,
-                      initialDate: selectedScheduleDate.value ?? DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2100),
-                    ).then((value) {
-                      if (value != null) {
-                        selectedScheduleDate.value = value;
-                      }
-                    });
-                  },
-                  icon: Icon(Icons.schedule),
-                ),
-                Spacer(),
                 TextButton(
                   onPressed: () {
                     if (formKey.currentState?.validate() ?? false) {

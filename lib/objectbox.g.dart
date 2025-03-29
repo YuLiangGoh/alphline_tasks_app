@@ -23,7 +23,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(1, 1476827231405608265),
       name: 'Task',
-      lastPropertyId: const obx_int.IdUid(12, 3338093977729777580),
+      lastPropertyId: const obx_int.IdUid(13, 7316730955158402204),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -72,7 +72,12 @@ final _entities = <obx_int.ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const obx_int.IdUid(1, 8644580038707151440),
-            relationTarget: 'Category')
+            relationTarget: 'Category'),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(13, 7316730955158402204),
+            name: 'createdAt',
+            type: 10,
+            flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[]),
@@ -175,7 +180,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
               ? null
               : fbb.writeList(
                   object.tags!.map(fbb.writeString).toList(growable: false));
-          fbb.startTable(13);
+          fbb.startTable(14);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, titleOffset);
           fbb.addOffset(2, descriptionOffset);
@@ -185,6 +190,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addInt64(9, object.deadlineAt?.millisecondsSinceEpoch);
           fbb.addInt64(10, object.completedAt?.millisecondsSinceEpoch);
           fbb.addInt64(11, object.category.targetId);
+          fbb.addInt64(12, object.createdAt?.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -195,26 +201,42 @@ obx_int.ModelDefinition getObjectBoxModel() {
               const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 22);
           final completedAtValue =
               const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 24);
-          final object = Task()
-            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
-            ..title = const fb.StringReader(asciiOptimization: true)
-                .vTableGetNullable(buffer, rootOffset, 6)
-            ..description = const fb.StringReader(asciiOptimization: true)
-                .vTableGetNullable(buffer, rootOffset, 8)
-            ..tags = const fb.ListReader<String>(
-                    fb.StringReader(asciiOptimization: true),
-                    lazy: false)
-                .vTableGetNullable(buffer, rootOffset, 16)
-            ..priority =
-                const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 18)
-            ..isRecurring =
-                const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 20)
-            ..deadlineAt = deadlineAtValue == null
-                ? null
-                : DateTime.fromMillisecondsSinceEpoch(deadlineAtValue)
-            ..completedAt = completedAtValue == null
-                ? null
-                : DateTime.fromMillisecondsSinceEpoch(completedAtValue);
+          final createdAtValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 28);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final titleParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 6);
+          final descriptionParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 8);
+          final deadlineAtParam = deadlineAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(deadlineAtValue);
+          final completedAtParam = completedAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(completedAtValue);
+          final createdAtParam = createdAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(createdAtValue);
+          final tagsParam = const fb.ListReader<String>(
+                  fb.StringReader(asciiOptimization: true),
+                  lazy: false)
+              .vTableGetNullable(buffer, rootOffset, 16);
+          final priorityParam =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 18);
+          final isRecurringParam =
+              const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 20);
+          final object = Task(
+              id: idParam,
+              title: titleParam,
+              description: descriptionParam,
+              deadlineAt: deadlineAtParam,
+              completedAt: completedAtParam,
+              createdAt: createdAtParam,
+              tags: tagsParam,
+              priority: priorityParam,
+              isRecurring: isRecurringParam);
           object.category.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0);
           object.category.attach(store);
@@ -247,13 +269,15 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final rootOffset = buffer.derefObject(0);
           final createdAtValue =
               const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 8);
-          final object = Category()
-            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
-            ..name = const fb.StringReader(asciiOptimization: true)
-                .vTableGetNullable(buffer, rootOffset, 6)
-            ..createdAt = createdAtValue == null
-                ? null
-                : DateTime.fromMillisecondsSinceEpoch(createdAtValue);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final nameParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 6);
+          final createdAtParam = createdAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(createdAtValue);
+          final object =
+              Category(id: idParam, name: nameParam, createdAt: createdAtParam);
           obx_int.InternalToManyAccess.setRelInfo<Category>(
               object.tasks,
               store,
@@ -302,6 +326,10 @@ class Task_ {
   /// See [Task.category].
   static final category =
       obx.QueryRelationToOne<Task, Category>(_entities[0].properties[8]);
+
+  /// See [Task.createdAt].
+  static final createdAt =
+      obx.QueryDateProperty<Task>(_entities[0].properties[9]);
 }
 
 /// [Category] entity fields to define ObjectBox queries.

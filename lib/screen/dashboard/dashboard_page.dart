@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:task/app/app_constant.dart';
-import 'package:task/screen/dashboard/component/tab_bar_item_widget.dart';
+import 'package:task/app/app_global.dart';
+import 'package:task/screen/dashboard/component/tab_bar_body_widget.dart';
 import 'package:task/screen/dashboard/dashboard_controller.dart';
 
 class DashboardPage extends HookConsumerWidget {
@@ -21,7 +23,7 @@ class DashboardPage extends HookConsumerWidget {
     }, []);
 
     return DefaultTabController(
-      length: 1 + dashboardViewModel.categories.length,
+      length: dashboardViewModel.categories.length,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: AppColor.whiteSmoke,
@@ -35,35 +37,68 @@ class DashboardPage extends HookConsumerWidget {
             ),
           ],
         ),
-        body: Scaffold(
-          backgroundColor: AppColor.whiteSmoke,
-          appBar: AppBar(
-            backgroundColor: AppColor.whiteSmoke,
-            flexibleSpace: TabBar(
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              tabs: [
-                Tab(text: 'All'),
-                ...dashboardViewModel.categories.map(
-                  (category) => Tab(text: category.name),
+        body:
+            dashboardViewModel.categories.isEmpty
+                ? Scaffold(
+                  backgroundColor: AppColor.whiteSmoke,
+                  body: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('No categories yet.', style: textStyleW600()),
+                          gapHeight8,
+                          Text(
+                            'Tap the button above to add a new category to start adding task.',
+                            style: textStyleW400(color: Colors.grey),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+                : Scaffold(
+                  backgroundColor: AppColor.whiteSmoke,
+                  appBar: AppBar(
+                    backgroundColor: AppColor.whiteSmoke,
+                    flexibleSpace: TabBar(
+                      isScrollable: true,
+                      tabAlignment: TabAlignment.start,
+                      onTap: dashboardController.setSelectedCategory,
+                      tabs: [
+                        ...dashboardViewModel.categories.map(
+                          (category) => Tab(text: category.name),
+                        ),
+                      ],
+                    ),
+                  ),
+                  body: TabBarView(
+                    children: [
+                      ...dashboardViewModel.categories.map(
+                        (category) => TabBarBodyWidget(
+                          categoryName: category.name ?? 'Unknown',
+                          onGoingTaskList:
+                              category.tasks
+                                  .where((task) => task.completedAt == null)
+                                  .toList(),
+                          completedTaskList:
+                              category.tasks
+                                  .where((task) => task.completedAt != null)
+                                  .toList(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              TabBarItemWidget(categoryName: 'All'),
-              ...dashboardViewModel.categories.map(
-                (category) =>
-                    TabBarItemWidget(categoryName: category.name ?? 'Unknown'),
-              ),
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: dashboardController.onAddTaskFloatingButtonPressed,
-          child: Icon(Icons.add),
-        ),
+        floatingActionButton:
+            dashboardViewModel.categories.isNotEmpty
+                ? FloatingActionButton(
+                  onPressed: dashboardController.onAddTaskFloatingButtonPressed,
+                  child: Icon(Icons.add),
+                )
+                : SizedBox(),
       ),
     );
   }
