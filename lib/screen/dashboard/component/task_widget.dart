@@ -163,7 +163,10 @@ class TaskWidget extends HookConsumerWidget {
                             ),
                             PopupMenuItem(
                               value: 2,
-                              child: Text('Delete Checked Tasks'),
+                              child: Text(
+                                'Delete Checked Tasks',
+                                style: textStyleW500(color: AppColor.errorRed),
+                              ),
                             ),
                           ];
                         },
