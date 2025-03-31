@@ -77,9 +77,9 @@ class TaskController extends StateNotifier<TaskViewModel> {
     objectbox.removeTask(taskId);
 
     state = state.copyWith(
-      onGoingTasks:
+      onGoingTasksFiltered:
           state.onGoingTasks.where((task) => task.id != taskId).toList(),
-      completedTasks:
+      completedTasksFiltered:
           state.completedTasks.where((task) => task.id != taskId).toList(),
     );
 
@@ -97,9 +97,9 @@ class TaskController extends StateNotifier<TaskViewModel> {
     await objectbox.updateTask(task);
 
     state = state.copyWith(
-      onGoingTasks:
+      onGoingTasksFiltered:
           state.onGoingTasks.where((task) => task.id != taskId).toList(),
-      completedTasks: [...state.completedTasks, task],
+      completedTasksFiltered: [...state.completedTasks, task],
     );
 
     showSnackBar('Task updated to completed');
@@ -111,9 +111,9 @@ class TaskController extends StateNotifier<TaskViewModel> {
     await objectbox.updateTask(task);
 
     state = state.copyWith(
-      completedTasks:
+      completedTasksFiltered:
           state.completedTasks.where((task) => task.id != taskId).toList(),
-      onGoingTasks: [...state.onGoingTasks, task],
+      onGoingTasksFiltered: [...state.onGoingTasks, task],
     );
 
     showSnackBar('Task updated to ongoing');
@@ -131,9 +131,9 @@ class TaskController extends StateNotifier<TaskViewModel> {
     );
 
     state = state.copyWith(
-      onGoingTasks:
+      onGoingTasksFiltered:
           state.onGoingTasks.where((task) => !task.isChecked).toList(),
-      completedTasks: [...state.completedTasks, ...checkedTasks],
+      completedTasksFiltered: [...state.completedTasks, ...checkedTasks],
     );
 
     showSnackBar('Task updated to completed');
@@ -150,9 +150,9 @@ class TaskController extends StateNotifier<TaskViewModel> {
     );
 
     state = state.copyWith(
-      onGoingTasks:
+      onGoingTasksFiltered:
           state.onGoingTasks.where((task) => !task.isChecked).toList(),
-      completedTasks: [...state.completedTasks],
+      completedTasksFiltered: [...state.completedTasks],
     );
 
     showSnackBar('Checked tasks removed');
