@@ -9,19 +9,27 @@ class TaskOngoingWidget extends HookWidget {
   const TaskOngoingWidget({
     super.key,
     required this.task,
+    this.onCheckedChanged,
     this.onDeletePressed,
     this.onEditPressed,
     this.onMarkAsCompleted,
   });
 
   final Task task;
+  final Function(int taskId, bool value)? onCheckedChanged;
   final Function(int taskId)? onDeletePressed;
   final Function(int taskId)? onEditPressed;
   final Function(int taskId)? onMarkAsCompleted;
 
   @override
   Widget build(BuildContext context) {
-    final isChecked = useState(false);
+    final isChecked = useState(task.isChecked);
+
+    useEffect(() {
+      isChecked.value = task.isChecked;
+      return null;
+    }, [task.isChecked]);
+
     return GestureDetector(
       onLongPress: () => onMarkAsCompleted?.call(task.id),
       child: Material(
@@ -67,7 +75,10 @@ class TaskOngoingWidget extends HookWidget {
               children: [
                 Checkbox(
                   value: isChecked.value,
-                  onChanged: (value) => isChecked.value = value ?? false,
+                  onChanged: (value) {
+                    isChecked.value = value ?? false;
+                    onCheckedChanged?.call(task.id, value ?? false);
+                  },
                   shape: CircleBorder(),
                 ),
                 Expanded(

@@ -28,6 +28,9 @@ class Task {
 
   bool? isRecurring;
 
+  @Transient()
+  bool isChecked;
+
   Task({
     this.id = 0,
     this.title,
@@ -38,5 +41,6 @@ class Task {
     this.tags,
     this.priority,
     this.isRecurring,
+    this.isChecked = false,
   });
 }

@@ -30,6 +30,11 @@ class TaskController extends StateNotifier<TaskViewModel> {
     });
   }
 
+  void updateChecked(int taskId, bool value) {
+    final task = state.onGoingTasks.firstWhere((task) => task.id == taskId);
+    task.isChecked = value;
+  }
+
   Future<void> removeTask(int taskId) async {
     objectbox.removeTask(taskId);
 
@@ -74,5 +79,44 @@ class TaskController extends StateNotifier<TaskViewModel> {
     );
 
     showSnackBar('Task updated to ongoing');
+  }
+
+  Future<void> updateCheckedTaskToCompleted() async {
+    final checkedTasks =
+        state.onGoingTasks.where((task) => task.isChecked).toList();
+
+    await Future.wait(
+      checkedTasks.map((task) async {
+        task.completedAt = DateTime.now();
+        await objectbox.updateTask(task);
+      }),
+    );
+
+    state = state.copyWith(
+      onGoingTasks:
+          state.onGoingTasks.where((task) => !task.isChecked).toList(),
+      completedTasks: [...state.completedTasks, ...checkedTasks],
+    );
+
+    showSnackBar('Task updated to completed');
+  }
+
+  Future<void> deleteCheckedTasks() async {
+    final checkedTasks =
+        state.onGoingTasks.where((task) => task.isChecked).toList();
+
+    await Future.wait(
+      checkedTasks.map((task) async {
+        objectbox.removeTask(task.id);
+      }),
+    );
+
+    state = state.copyWith(
+      onGoingTasks:
+          state.onGoingTasks.where((task) => !task.isChecked).toList(),
+      completedTasks: [...state.completedTasks],
+    );
+
+    showSnackBar('Checked tasks removed');
   }
 }

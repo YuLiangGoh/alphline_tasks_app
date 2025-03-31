@@ -149,18 +149,34 @@ class TaskWidget extends HookConsumerWidget {
                           );
                         },
                       ),
-                      SizedBox(
-                        width: 24.w,
-                        height: 24.w,
-                        child: IconButton(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 2.w,
-                            vertical: 2.h,
-                          ),
-                          constraints: BoxConstraints(),
-                          onPressed: () {},
-                          icon: Icon(Icons.more_vert, size: 16.w),
-                        ),
+                      gapWidth12,
+                      PopupMenuButton(
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              value: 0,
+                              child: Text('Remove Category'),
+                            ),
+                            PopupMenuItem(
+                              value: 1,
+                              child: Text('Mark Checked Completed'),
+                            ),
+                            PopupMenuItem(
+                              value: 2,
+                              child: Text('Delete Checked Tasks'),
+                            ),
+                          ];
+                        },
+                        onSelected: (value) {
+                          if (value == 0) {
+                            // taskController.removeCategory(category.id);
+                          } else if (value == 1) {
+                            taskController.updateCheckedTaskToCompleted();
+                          } else if (value == 2) {
+                            taskController.deleteCheckedTasks();
+                          }
+                        },
+                        child: Icon(Icons.more_vert, size: 16.w),
                       ),
                     ],
                   ),
@@ -173,6 +189,9 @@ class TaskWidget extends HookConsumerWidget {
                         itemBuilder: (_, index) {
                           return TaskOngoingWidget(
                             task: taskViewModel.onGoingTasks[index],
+                            onCheckedChanged: (taskId, value) {
+                              taskController.updateChecked(taskId, value);
+                            },
                             onDeletePressed:
                                 (taskId) async =>
                                     await taskController.removeTask(taskId),
