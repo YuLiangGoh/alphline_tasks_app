@@ -14,6 +14,43 @@ class TaskController extends StateNotifier<TaskViewModel> {
   TaskController()
     : super(TaskViewModel(sortType: TaskSortType.creationDescending));
 
+  void onSearchTextChanged(String text) {
+    // uncheck all tasks
+    uncheckAllTasks();
+
+    // Filter ongoing tasks based on search text
+    final filteredOngoingTasks =
+        state.onGoingTasks
+            .where(
+              (task) => (task.title?.toLowerCase() ?? '').contains(
+                text.toLowerCase(),
+              ),
+            )
+            .toList();
+
+    // Filter completed tasks based on search text
+    final filteredCompletedTasks =
+        state.completedTasks
+            .where(
+              (task) => (task.title?.toLowerCase() ?? '').contains(
+                text.toLowerCase(),
+              ),
+            )
+            .toList();
+
+    // Update the state with filtered tasks
+    state = state.copyWith(
+      onGoingTasksFiltered: filteredOngoingTasks,
+      completedTasksFiltered: filteredCompletedTasks,
+    );
+  }
+
+  void uncheckAllTasks() {
+    for (var task in state.onGoingTasks) {
+      task.isChecked = false;
+    }
+  }
+
   Future<void> getTasks(int categoryId, {TaskSortType? taskSortType}) async {
     await Future.wait([
       objectbox.getOngoingTasksByCategoryIdAndOrderBy(
@@ -25,6 +62,8 @@ class TaskController extends StateNotifier<TaskViewModel> {
       state = state.copyWith(
         onGoingTasks: value[0],
         completedTasks: value[1],
+        onGoingTasksFiltered: value[0],
+        completedTasksFiltered: value[1],
         sortType: taskSortType ?? state.sortType,
       );
     });

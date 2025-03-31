@@ -23,4 +23,6 @@ class AppColor {
   static const Color frenchPass = Color(0XFFCAECFC);
   static const Color palePeach = Color(0XFFFFE8AB);
   static const Color whiteSmoke = Color(0XFFfefefe);
+
+  static var grey;
 }
