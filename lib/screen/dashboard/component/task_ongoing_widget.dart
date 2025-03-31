@@ -3,18 +3,20 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:task/app/app_global.dart';
-import 'package:task/app/app_route.dart';
 import 'package:task/entity/model/task.dart';
-import 'package:task/screen/dashboard/view_edit_task_page.dart';
 
 class TaskOngoingWidget extends HookWidget {
   const TaskOngoingWidget({
     super.key,
     required this.task,
+    this.onDeletePressed,
+    this.onEditPressed,
     this.onMarkAsCompleted,
   });
 
   final Task task;
+  final Function(int taskId)? onDeletePressed;
+  final Function(int taskId)? onEditPressed;
   final Function(int taskId)? onMarkAsCompleted;
 
   @override
@@ -32,7 +34,7 @@ class TaskOngoingWidget extends HookWidget {
               SlidableAction(
                 padding: EdgeInsets.zero,
                 onPressed: (context) {
-                  // Handle delete action
+                  onDeletePressed?.call(task.id);
                 },
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
@@ -41,7 +43,7 @@ class TaskOngoingWidget extends HookWidget {
               SlidableAction(
                 padding: EdgeInsets.zero,
                 onPressed: (context) {
-                  // Handle edit action
+                  onEditPressed?.call(task.id);
                 },
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
@@ -71,10 +73,7 @@ class TaskOngoingWidget extends HookWidget {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      AppRoute.pushPage(
-                        AppRoute.viewEditTask,
-                        ViewEditTaskPage(task: task),
-                      );
+                      onEditPressed?.call(task.id);
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

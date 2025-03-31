@@ -1,6 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:task/app/app_global.dart';
+import 'package:task/app/app_route.dart';
 import 'package:task/entity/view_model/task_view_model.dart';
+import 'package:task/screen/dashboard/view_edit_task_page.dart';
 
 final taskProvider =
     StateNotifierProvider.autoDispose<TaskController, TaskViewModel>(
@@ -28,6 +30,13 @@ class TaskController extends StateNotifier<TaskViewModel> {
       completedTasks:
           state.completedTasks.where((task) => task.id != taskId).toList(),
     );
+
+    showSnackBar('Task removed');
+  }
+
+  void navigateToEditTask(int taskId) {
+    final task = state.onGoingTasks.firstWhere((task) => task.id == taskId);
+    AppRoute.pushPage(AppRoute.viewEditTask, ViewEditTaskPage(task: task));
   }
 
   Future<void> updateTaskToCompleted(int taskId) async {

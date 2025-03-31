@@ -95,6 +95,12 @@ class TaskWidget extends HookConsumerWidget {
                         itemBuilder: (_, index) {
                           return TaskOngoingWidget(
                             task: taskViewModel.onGoingTasks[index],
+                            onDeletePressed:
+                                (taskId) async =>
+                                    await taskController.removeTask(taskId),
+                            onEditPressed:
+                                (taskId) =>
+                                    taskController.navigateToEditTask(taskId),
                             onMarkAsCompleted:
                                 taskController.updateTaskToCompleted,
                           );
