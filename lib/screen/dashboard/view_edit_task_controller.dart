@@ -6,7 +6,6 @@ import 'package:task/app/app_route.dart';
 import 'package:task/entity/model/task.dart';
 import 'package:task/entity/view_model/view_edit_task_view_model.dart';
 import 'package:task/screen/dashboard/component/task_widget_controller.dart';
-import 'package:task/screen/dashboard/dashboard_controller.dart';
 
 final viewEditTaskProvider = StateNotifierProvider.autoDispose<
   ViewEditTaskController,
@@ -44,34 +43,21 @@ class ViewEditTaskController extends StateNotifier<ViewEditTaskViewModel> {
     state = state.copyWith(deadlineAt: dateTime);
   }
 
-  Future<void> onDeletePressed(WidgetRef ref) async {
-    await objectbox.deleteTask(state.task!.id);
+  Future<void> onDeletePressed(TaskController taskController) async {
+    await taskController.removeTask(state.task!.id);
     AppRoute.popPage();
-    showSnackBar('Task deleted successfully');
-    await ref
-        .read(taskProvider.notifier)
-        .getTasks(ref.read(dashboardProvider).selectedCategory!.id);
   }
 
-  Future<void> onMarkAsCompletedPressed(WidgetRef ref) async {
-    state.task?.completedAt = DateTime.now();
-    await objectbox.updateTask(state.task!);
+  Future<void> onMarkAsCompletedPressed(TaskController taskController) async {
+    await taskController.updateTaskToCompleted(state.task!.id);
     AppRoute.popPage();
-    showSnackBar('Task marked as completed successfully');
-    await ref
-        .read(taskProvider.notifier)
-        .getTasks(ref.read(dashboardProvider).selectedCategory!.id);
   }
 
-  Future<void> onUpdateTaskPressed(WidgetRef ref) async {
+  Future<void> onUpdateTaskPressed(TaskController taskController) async {
     state.task?.title = state.title;
     state.task?.description = state.description;
     state.task?.deadlineAt = state.deadlineAt;
-    await objectbox.updateTask(state.task!);
+    await taskController.updateTask(state.task!);
     AppRoute.popPage();
-    showSnackBar('Task updated successfully');
-    await ref
-        .read(taskProvider.notifier)
-        .getTasks(ref.read(dashboardProvider).selectedCategory!.id);
   }
 }

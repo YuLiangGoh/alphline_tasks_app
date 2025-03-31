@@ -74,22 +74,11 @@ class DashboardPage extends HookConsumerWidget {
                       ],
                     ),
                   ),
-                  body: TabBarView(
-                    children: [
-                      ...dashboardViewModel.categories.map(
-                        (category) =>
-                            TaskWidget(category: category),
-                      ),
-                    ],
+                  body: TaskWidget(
+                    key: ValueKey(dashboardViewModel.selectedCategory?.id),
+                    category: dashboardViewModel.selectedCategory!,
                   ),
                 ),
-        floatingActionButton:
-            dashboardViewModel.categories.isNotEmpty
-                ? FloatingActionButton(
-                  onPressed: () => dashboardController.onAddTaskFloatingButtonPressed(ref),
-                  child: Icon(Icons.add),
-                )
-                : SizedBox(),
       ),
     );
   }

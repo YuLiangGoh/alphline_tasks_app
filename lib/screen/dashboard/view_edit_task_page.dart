@@ -5,12 +5,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:task/app/app_constant.dart';
 import 'package:task/app/app_global.dart';
 import 'package:task/entity/model/task.dart';
+import 'package:task/screen/dashboard/component/task_widget_controller.dart';
 import 'package:task/screen/dashboard/view_edit_task_controller.dart';
 
 class ViewEditTaskPage extends HookConsumerWidget {
-  const ViewEditTaskPage({super.key, this.task});
+  const ViewEditTaskPage({super.key, this.task, required this.taskController});
 
   final Task? task;
+  final TaskController taskController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,9 +52,9 @@ class ViewEditTaskPage extends HookConsumerWidget {
             },
             onSelected: (value) {
               if (value == 0) {
-                viewEditTaskController.onMarkAsCompletedPressed(ref);
+                viewEditTaskController.onMarkAsCompletedPressed(taskController);
               } else if (value == 1) {
-                viewEditTaskController.onDeletePressed(ref);
+                viewEditTaskController.onDeletePressed(taskController);
               }
             },
           ),
@@ -140,7 +142,8 @@ class ViewEditTaskPage extends HookConsumerWidget {
           style: TextButton.styleFrom(
             padding: EdgeInsets.symmetric(vertical: 16.h),
           ),
-          onPressed: () => viewEditTaskController.onUpdateTaskPressed(ref),
+          onPressed:
+              () => viewEditTaskController.onUpdateTaskPressed(taskController),
           child: Text('Save'),
         ),
       ),

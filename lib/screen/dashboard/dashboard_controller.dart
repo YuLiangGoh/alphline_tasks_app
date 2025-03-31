@@ -3,11 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:task/app/app_constant.dart';
 import 'package:task/app/app_global.dart';
-import 'package:task/entity/model/task.dart';
 import 'package:task/entity/view_model/dashboard_view_model.dart';
 import 'package:task/screen/dashboard/component/add_category_bottom_sheet.dart';
-import 'package:task/screen/dashboard/component/add_task_bottom_sheet_widget.dart';
-import 'package:task/screen/dashboard/component/task_widget_controller.dart';
 
 final dashboardProvider =
     StateNotifierProvider.autoDispose<DashboardController, DashboardViewModel>(
@@ -68,44 +65,6 @@ class DashboardController extends StateNotifier<DashboardViewModel> {
             await objectbox.addCategory(name);
 
             await getCategories();
-          },
-        );
-      },
-    );
-  }
-
-  void onAddTaskFloatingButtonPressed(WidgetRef ref) {
-    showModalBottomSheet(
-      backgroundColor: AppColor.white,
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16.r),
-          topRight: Radius.circular(16.r),
-        ),
-      ),
-      context: globalContext,
-      builder: (_) {
-        return AddTaskBottomSheetWidget(
-          onAddTaskPressed: (
-            String title,
-            String? description,
-            DateTime? scheduleDate,
-          ) async {
-            final task = Task(
-              title: title,
-              description: description,
-              deadlineAt: scheduleDate,
-              createdAt: DateTime.now(),
-            );
-
-            task.category.target = state.selectedCategory;
-
-            await objectbox.addTask(task);
-
-            await ref
-                .read(taskProvider.notifier)
-                .getTasks(state.selectedCategory!.id);
           },
         );
       },

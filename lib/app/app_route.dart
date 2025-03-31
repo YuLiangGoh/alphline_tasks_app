@@ -16,10 +16,15 @@ class AppRoute {
 
     switch (settings.name) {
       case dashboard:
-        return materialPageRoute(const DashboardPage());
+        return materialPageRoute(DashboardPage());
       case viewEditTask:
         final args = settings.arguments as ViewEditTaskPage?;
-        return materialPageRoute(ViewEditTaskPage(task: args?.task));
+        return materialPageRoute(
+          ViewEditTaskPage(
+            task: args?.task,
+            taskController: args!.taskController,
+          ),
+        );
       default:
         return materialPageRoute(const DashboardPage());
     }
