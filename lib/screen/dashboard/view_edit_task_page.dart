@@ -28,7 +28,9 @@ class ViewEditTaskPage extends HookConsumerWidget {
     }, []);
 
     return Scaffold(
+      backgroundColor: AppColor.whiteSmoke,
       appBar: AppBar(
+        backgroundColor: AppColor.whiteSmoke,
         actions: [
           PopupMenuButton(
             itemBuilder: (context) {
