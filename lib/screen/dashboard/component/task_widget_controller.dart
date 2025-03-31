@@ -1,6 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:task/app/app_global.dart';
 import 'package:task/app/app_route.dart';
+import 'package:task/entity/enum/task_sort_type_enum.dart';
 import 'package:task/entity/view_model/task_view_model.dart';
 import 'package:task/screen/dashboard/view_edit_task_page.dart';
 
@@ -10,14 +11,22 @@ final taskProvider =
     );
 
 class TaskController extends StateNotifier<TaskViewModel> {
-  TaskController() : super(TaskViewModel());
+  TaskController()
+    : super(TaskViewModel(sortType: TaskSortType.creationDescending));
 
-  Future<void> getTasks(int categoryId) async {
+  Future<void> getTasks(int categoryId, {TaskSortType? taskSortType}) async {
     await Future.wait([
-      objectbox.getOngoingTasksByCategoryId(categoryId),
+      objectbox.getOngoingTasksByCategoryIdAndOrderBy(
+        categoryId,
+        taskSortType ?? state.sortType,
+      ),
       objectbox.getCompletedTasksByCategoryId(categoryId),
     ]).then((value) {
-      state = state.copyWith(onGoingTasks: value[0], completedTasks: value[1]);
+      state = state.copyWith(
+        onGoingTasks: value[0],
+        completedTasks: value[1],
+        sortType: taskSortType ?? state.sortType,
+      );
     });
   }
 

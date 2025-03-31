@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:task/app/app_constant.dart';
 import 'package:task/app/app_global.dart';
+import 'package:task/entity/enum/task_sort_type_enum.dart';
 import 'package:task/entity/model/category.dart';
 import 'package:task/entity/view_model/task_view_model.dart';
 import 'package:task/screen/dashboard/component/task_completed_widget.dart';
@@ -58,18 +59,95 @@ class TaskWidget extends HookConsumerWidget {
                     children: [
                       Text(category.name ?? 'Unknown'),
                       const Spacer(),
-                      SizedBox(
-                        width: 24.w,
-                        height: 24.w,
-                        child: IconButton(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 2.w,
-                            vertical: 2.h,
-                          ),
-                          constraints: BoxConstraints(),
-                          onPressed: () {},
-                          icon: Icon(Icons.swap_vert, size: 16.w),
+                      PopupMenuButton(
+                        child: SizedBox(
+                          width: 24.w,
+                          height: 24.w,
+                          child: Icon(Icons.swap_vert, size: 16.w),
                         ),
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              value: 0,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(TaskSortType.deadlineAscending.label),
+                                  if (taskViewModel.sortType ==
+                                      TaskSortType.deadlineAscending) ...[
+                                    gapWidth4,
+                                    Icon(
+                                      Icons.check,
+                                      size: 16.w,
+                                      color: AppColor.black,
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: 1,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(TaskSortType.deadlineDescending.label),
+                                  if (taskViewModel.sortType ==
+                                      TaskSortType.deadlineDescending) ...[
+                                    gapWidth4,
+                                    Icon(
+                                      Icons.check,
+                                      size: 16.w,
+                                      color: AppColor.black,
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: 2,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(TaskSortType.creationAscending.label),
+                                  if (taskViewModel.sortType ==
+                                      TaskSortType.creationAscending) ...[
+                                    gapWidth4,
+                                    Icon(
+                                      Icons.check,
+                                      size: 16.w,
+                                      color: AppColor.black,
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: 3,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(TaskSortType.creationDescending.label),
+                                  if (taskViewModel.sortType ==
+                                      TaskSortType.creationDescending) ...[
+                                    gapWidth4,
+                                    Icon(
+                                      Icons.check,
+                                      size: 16.w,
+                                      color: AppColor.black,
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ];
+                        },
+                        onSelected: (value) {
+                          TaskSortType sortType = TaskSortType.values[value];
+                          taskController.getTasks(
+                            category.id,
+                            taskSortType: sortType,
+                          );
+                        },
                       ),
                       SizedBox(
                         width: 24.w,

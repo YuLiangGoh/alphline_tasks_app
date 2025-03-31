@@ -2,6 +2,7 @@
 
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:task/entity/enum/task_sort_type_enum.dart';
 import 'package:task/entity/model/category.dart';
 import 'package:task/entity/model/task.dart';
 import 'package:task/objectbox.g.dart';
@@ -55,17 +56,49 @@ class ObjectBox {
         .query(
           Task_.completedAt.notNull().and(Task_.category.equals(categoryId)),
         )
+        .order(Task_.completedAt, flags: Order.descending)
         .build()
         .find();
   }
 
-  Future<List<Task>> getOngoingTasksByCategoryId(int categoryId) async {
-    return _taskBox
-        .query(
-          Task_.completedAt.isNull().and(Task_.category.equals(categoryId)),
-        )
-        .build()
-        .find();
+  Future<List<Task>> getOngoingTasksByCategoryIdAndOrderBy(
+    int categoryId,
+    TaskSortType taskSortType,
+  ) async {
+    switch (taskSortType) {
+      case TaskSortType.creationDescending:
+        return _taskBox
+            .query(
+              Task_.completedAt.isNull().and(Task_.category.equals(categoryId)),
+            )
+            .order(Task_.createdAt, flags: Order.descending)
+            .build()
+            .find();
+      case TaskSortType.creationAscending:
+        return _taskBox
+            .query(
+              Task_.completedAt.isNull().and(Task_.category.equals(categoryId)),
+            )
+            .order(Task_.createdAt)
+            .build()
+            .find();
+      case TaskSortType.deadlineAscending:
+        return _taskBox
+            .query(
+              Task_.completedAt.isNull().and(Task_.category.equals(categoryId)),
+            )
+            .order(Task_.deadlineAt)
+            .build()
+            .find();
+      case TaskSortType.deadlineDescending:
+        return _taskBox
+            .query(
+              Task_.completedAt.isNull().and(Task_.category.equals(categoryId)),
+            )
+            .order(Task_.deadlineAt, flags: Order.descending)
+            .build()
+            .find();
+    }
   }
 
   void deleteAllTasks() async {
