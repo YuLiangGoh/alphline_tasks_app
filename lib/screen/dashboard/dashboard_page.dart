@@ -75,10 +75,10 @@ class DashboardPage extends HookConsumerWidget {
                     ),
                   ),
                   body: TabBarView(
+                    key: UniqueKey(),
                     children: [
                       ...dashboardViewModel.categories.map(
-                        (category) =>
-                            TaskWidget(category: category),
+                        (category) => TaskWidget(category: category),
                       ),
                     ],
                   ),
@@ -86,7 +86,10 @@ class DashboardPage extends HookConsumerWidget {
         floatingActionButton:
             dashboardViewModel.categories.isNotEmpty
                 ? FloatingActionButton(
-                  onPressed: () => dashboardController.onAddTaskFloatingButtonPressed(ref),
+                  onPressed:
+                      () => dashboardController.onAddTaskFloatingButtonPressed(
+                        ref,
+                      ),
                   child: Icon(Icons.add),
                 )
                 : SizedBox(),

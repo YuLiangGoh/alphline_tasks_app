@@ -30,7 +30,7 @@ class TaskWidget extends HookConsumerWidget {
         await taskController.getTasks(category.id);
       });
       return;
-    }, [category]);
+    }, []);
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),

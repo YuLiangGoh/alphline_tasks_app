@@ -5,10 +5,9 @@ import 'package:task/entity/enum/task_sort_type_enum.dart';
 import 'package:task/entity/view_model/task_view_model.dart';
 import 'package:task/screen/dashboard/view_edit_task_page.dart';
 
-final taskProvider =
-    StateNotifierProvider.autoDispose<TaskController, TaskViewModel>(
-      (ref) => TaskController(),
-    );
+final taskProvider = StateNotifierProvider<TaskController, TaskViewModel>(
+  (ref) => TaskController(),
+);
 
 class TaskController extends StateNotifier<TaskViewModel> {
   TaskController()
