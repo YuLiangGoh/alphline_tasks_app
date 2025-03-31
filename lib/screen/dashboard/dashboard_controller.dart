@@ -7,6 +7,7 @@ import 'package:task/entity/model/task.dart';
 import 'package:task/entity/view_model/dashboard_view_model.dart';
 import 'package:task/screen/dashboard/component/add_category_bottom_sheet.dart';
 import 'package:task/screen/dashboard/component/add_task_bottom_sheet_widget.dart';
+import 'package:task/screen/dashboard/component/task_widget_controller.dart';
 
 final dashboardProvider =
     StateNotifierProvider.autoDispose<DashboardController, DashboardViewModel>(
@@ -73,7 +74,7 @@ class DashboardController extends StateNotifier<DashboardViewModel> {
     );
   }
 
-  void onAddTaskFloatingButtonPressed() {
+  void onAddTaskFloatingButtonPressed(WidgetRef ref) {
     showModalBottomSheet(
       backgroundColor: AppColor.white,
       isScrollControlled: true,
@@ -102,7 +103,9 @@ class DashboardController extends StateNotifier<DashboardViewModel> {
 
             await objectbox.addTask(task);
 
-            await getCategories();
+            await ref
+                .read(taskProvider.notifier)
+                .getTasks(state.selectedCategory!.id);
           },
         );
       },

@@ -2,29 +2,35 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:task/app/app_constant.dart';
 import 'package:task/app/app_global.dart';
-import 'package:task/entity/model/task.dart';
-import 'package:task/screen/dashboard/component/tab_bar_body_ongoing_task_widget.dart';
+import 'package:task/entity/model/category.dart';
+import 'package:task/entity/view_model/task_view_model.dart';
+import 'package:task/screen/dashboard/component/task_completed_widget.dart';
+import 'package:task/screen/dashboard/component/task_ongoing_widget.dart';
+import 'package:task/screen/dashboard/component/task_widget_controller.dart';
 
-class TabBarBodyWidget extends HookWidget {
-  const TabBarBodyWidget({
-    super.key,
-    required this.categoryName,
-    this.onGoingTaskList = const [],
-    this.completedTaskList = const [],
-    this.onTaskMarkAsDone,
-    this.onTaskMarkAsNotDone,
-  });
+class TaskWidget extends HookConsumerWidget {
+  TaskWidget({super.key, required this.category});
 
-  final String categoryName;
-  final List<Task> onGoingTaskList;
-  final List<Task> completedTaskList;
-  final Function(Task task)? onTaskMarkAsDone;
-  final Function(Task task)? onTaskMarkAsNotDone;
+  final Category category;
+
+  late TaskViewModel taskViewModel;
+  late TaskController taskController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    taskViewModel = ref.watch(taskProvider);
+    taskController = ref.read(taskProvider.notifier);
+
+    useEffect(() {
+      Future.microtask(() async {
+        await taskController.getTasks(category.id);
+      });
+      return;
+    }, [category.id]);
+
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -50,7 +56,7 @@ class TabBarBodyWidget extends HookWidget {
                 children: [
                   Row(
                     children: [
-                      Text(categoryName),
+                      Text(category.name ?? 'Unknown'),
                       const Spacer(),
                       SizedBox(
                         width: 24.w,
@@ -80,15 +86,17 @@ class TabBarBodyWidget extends HookWidget {
                       ),
                     ],
                   ),
-                  onGoingTaskList.isEmpty
+                  taskViewModel.onGoingTasks.isEmpty
                       ? _defaultEmptyWidget()
                       : ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: onGoingTaskList.length,
+                        itemCount: taskViewModel.onGoingTasks.length,
                         itemBuilder: (_, index) {
-                          return TabBarBodyOngoingTaskWidget(
-                            task: onGoingTaskList[index],
+                          return TaskOngoingWidget(
+                            task: taskViewModel.onGoingTasks[index],
+                            onMarkAsCompleted:
+                                taskController.updateTaskToCompleted,
                           );
                         },
                       ),
@@ -115,23 +123,19 @@ class TabBarBodyWidget extends HookWidget {
                 expanded: ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: completedTaskList.length,
+                  itemCount: taskViewModel.completedTasks.length,
                   itemBuilder: (_, index) {
-                    return ListTile(
-                      leading: Icon(Icons.check, color: Colors.green),
-                      title: Text(
-                        'Task ${index + 1}',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
-                      subtitle: Text('Task description'),
-                      onTap: () {},
+                    return TaskCompletedWidget(
+                      task: taskViewModel.completedTasks[index],
+                      onTaskMarkAsNotDone:
+                          (taskId) =>
+                              taskController.updateTaskToOngoing(taskId),
                     );
                   },
                 ),
-                header: Text('Completed (${completedTaskList.length})'),
+                header: Text(
+                  'Completed (${taskViewModel.completedTasks.length})',
+                ),
                 theme: ExpandableThemeData(
                   headerAlignment: ExpandablePanelHeaderAlignment.top,
                   iconPadding: EdgeInsets.only(right: 8.w),

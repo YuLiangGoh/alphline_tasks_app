@@ -34,12 +34,38 @@ class ObjectBox {
     await _taskBox.putAsync(task);
   }
 
+  void removeTask(int id) async {
+    _taskBox.remove(id);
+  }
+
   Future<void> deleteTask(int id) async {
     await _taskBox.removeAsync(id);
   }
 
   Future<List<Task>> getAllTasks() async {
     return _taskBox.getAll();
+  }
+
+  Future<List<Task>> getTasksByCategoryId(int categoryId) async {
+    return _taskBox.query(Task_.category.equals(categoryId)).build().find();
+  }
+
+  Future<List<Task>> getCompletedTasksByCategoryId(int categoryId) async {
+    return _taskBox
+        .query(
+          Task_.completedAt.notNull().and(Task_.category.equals(categoryId)),
+        )
+        .build()
+        .find();
+  }
+
+  Future<List<Task>> getOngoingTasksByCategoryId(int categoryId) async {
+    return _taskBox
+        .query(
+          Task_.completedAt.isNull().and(Task_.category.equals(categoryId)),
+        )
+        .build()
+        .find();
   }
 
   void deleteAllTasks() async {

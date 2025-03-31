@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:task/app/app_constant.dart';
 import 'package:task/app/app_global.dart';
-import 'package:task/screen/dashboard/component/tab_bar_body_widget.dart';
+import 'package:task/screen/dashboard/component/task_widget.dart';
 import 'package:task/screen/dashboard/dashboard_controller.dart';
 
 class DashboardPage extends HookConsumerWidget {
@@ -77,17 +77,8 @@ class DashboardPage extends HookConsumerWidget {
                   body: TabBarView(
                     children: [
                       ...dashboardViewModel.categories.map(
-                        (category) => TabBarBodyWidget(
-                          categoryName: category.name ?? 'Unknown',
-                          onGoingTaskList:
-                              category.tasks
-                                  .where((task) => task.completedAt == null)
-                                  .toList(),
-                          completedTaskList:
-                              category.tasks
-                                  .where((task) => task.completedAt != null)
-                                  .toList(),
-                        ),
+                        (category) =>
+                            TaskWidget(category: category),
                       ),
                     ],
                   ),
@@ -95,7 +86,7 @@ class DashboardPage extends HookConsumerWidget {
         floatingActionButton:
             dashboardViewModel.categories.isNotEmpty
                 ? FloatingActionButton(
-                  onPressed: dashboardController.onAddTaskFloatingButtonPressed,
+                  onPressed: () => dashboardController.onAddTaskFloatingButtonPressed(ref),
                   child: Icon(Icons.add),
                 )
                 : SizedBox(),

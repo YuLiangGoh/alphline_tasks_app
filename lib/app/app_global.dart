@@ -94,14 +94,13 @@ TextStyle textStyleW900({
   Color? color,
   double? height,
   FontStyle? fontStyle,
-}) =>
-    TextStyle(
-      fontWeight: FontWeight.w900,
-      fontSize: fontSize?.sp,
-      color: color ?? AppColor.black,
-      height: height,
-      fontStyle: fontStyle,
-    );
+}) => TextStyle(
+  fontWeight: FontWeight.w900,
+  fontSize: fontSize?.sp,
+  color: color ?? AppColor.black,
+  height: height,
+  fontStyle: fontStyle,
+);
 
 /// A constant [TextStyle] with a font weight of [FontWeight.w800].
 TextStyle textStyleW800({
@@ -109,14 +108,13 @@ TextStyle textStyleW800({
   Color? color,
   double? height,
   FontStyle? fontStyle,
-}) =>
-    TextStyle(
-      fontWeight: FontWeight.w800,
-      fontSize: fontSize?.sp,
-      color: color ?? AppColor.black,
-      height: height,
-      fontStyle: fontStyle,
-    );
+}) => TextStyle(
+  fontWeight: FontWeight.w800,
+  fontSize: fontSize?.sp,
+  color: color ?? AppColor.black,
+  height: height,
+  fontStyle: fontStyle,
+);
 
 /// A constant [TextStyle] with a font weight of [FontWeight.w700].
 TextStyle textStyleW700({
@@ -124,14 +122,13 @@ TextStyle textStyleW700({
   Color? color,
   double? height,
   FontStyle? fontStyle,
-}) =>
-    TextStyle(
-      fontWeight: FontWeight.w700,
-      fontSize: fontSize?.sp,
-      color: color ?? AppColor.black,
-      height: height,
-      fontStyle: fontStyle,
-    );
+}) => TextStyle(
+  fontWeight: FontWeight.w700,
+  fontSize: fontSize?.sp,
+  color: color ?? AppColor.black,
+  height: height,
+  fontStyle: fontStyle,
+);
 
 /// A constant [TextStyle] with a font weight of [FontWeight.w600].
 TextStyle textStyleW600({
@@ -141,16 +138,15 @@ TextStyle textStyleW600({
   TextDecoration? textDecoration,
   double? wordSpacing,
   FontStyle? fontStyle,
-}) =>
-    TextStyle(
-      fontWeight: FontWeight.w600,
-      fontSize: fontSize?.sp,
-      color: color ?? AppColor.black,
-      height: height,
-      decoration: textDecoration,
-      wordSpacing: wordSpacing,
-      fontStyle: fontStyle,
-    );
+}) => TextStyle(
+  fontWeight: FontWeight.w600,
+  fontSize: fontSize?.sp,
+  color: color ?? AppColor.black,
+  height: height,
+  decoration: textDecoration,
+  wordSpacing: wordSpacing,
+  fontStyle: fontStyle,
+);
 
 /// A constant [TextStyle] with a font weight of [FontWeight.w500].
 TextStyle textStyleW500({
@@ -158,14 +154,13 @@ TextStyle textStyleW500({
   Color? color,
   double? height,
   FontStyle? fontStyle,
-}) =>
-    TextStyle(
-      fontWeight: FontWeight.w500,
-      fontSize: fontSize?.sp,
-      color: color ?? AppColor.black,
-      height: height,
-      fontStyle: fontStyle,
-    );
+}) => TextStyle(
+  fontWeight: FontWeight.w500,
+  fontSize: fontSize?.sp,
+  color: color ?? AppColor.black,
+  height: height,
+  fontStyle: fontStyle,
+);
 
 /// A constant [TextStyle] with a font weight of [FontWeight.w400].
 TextStyle textStyleW400({
@@ -173,14 +168,13 @@ TextStyle textStyleW400({
   Color? color,
   double? height,
   FontStyle? fontStyle,
-}) =>
-    TextStyle(
-      fontWeight: FontWeight.w400,
-      fontSize: fontSize?.sp,
-      color: color ?? AppColor.black,
-      height: height,
-      fontStyle: fontStyle,
-    );
+}) => TextStyle(
+  fontWeight: FontWeight.w400,
+  fontSize: fontSize?.sp,
+  color: color ?? AppColor.black,
+  height: height,
+  fontStyle: fontStyle,
+);
 
 /// A constant [TextStyle] with a font weight of [FontWeight.w300].
 TextStyle textStyleW300({
@@ -188,14 +182,13 @@ TextStyle textStyleW300({
   Color? color,
   double? height,
   FontStyle? fontStyle,
-}) =>
-    TextStyle(
-      fontWeight: FontWeight.w300,
-      fontSize: fontSize?.sp,
-      color: color ?? AppColor.black,
-      height: height,
-      fontStyle: fontStyle,
-    );
+}) => TextStyle(
+  fontWeight: FontWeight.w300,
+  fontSize: fontSize?.sp,
+  color: color ?? AppColor.black,
+  height: height,
+  fontStyle: fontStyle,
+);
 
 /// A constant [TextStyle] with a font weight of [FontWeight.w200].
 TextStyle textStyleW200({
@@ -203,14 +196,13 @@ TextStyle textStyleW200({
   Color? color,
   double? height,
   FontStyle? fontStyle,
-}) =>
-    TextStyle(
-      fontWeight: FontWeight.w200,
-      fontSize: fontSize?.sp,
-      color: color ?? AppColor.black,
-      height: height,
-      fontStyle: fontStyle,
-    );
+}) => TextStyle(
+  fontWeight: FontWeight.w200,
+  fontSize: fontSize?.sp,
+  color: color ?? AppColor.black,
+  height: height,
+  fontStyle: fontStyle,
+);
 
 /// A constant [TextStyle] with a font weight of [FontWeight.w100].
 TextStyle textStyleW100({
@@ -218,14 +210,13 @@ TextStyle textStyleW100({
   Color? color,
   double? height,
   FontStyle? fontStyle,
-}) =>
-    TextStyle(
-      fontWeight: FontWeight.w100,
-      fontSize: fontSize?.sp,
-      color: color ?? AppColor.black,
-      height: height,
-      fontStyle: fontStyle,
-    );
+}) => TextStyle(
+  fontWeight: FontWeight.w100,
+  fontSize: fontSize?.sp,
+  color: color ?? AppColor.black,
+  height: height,
+  fontStyle: fontStyle,
+);
 
 /// Displays an error dialog with a customizable title, content, and confirm button text.
 ///
@@ -263,11 +254,11 @@ Future showErrorDialog({
 );
 
 /// Displays a confirmation dialog with customizable options.
-/// 
+///
 /// This function shows a dialog that prompts the user to confirm or cancel
 /// an action. The dialog can be customized with various parameters such as
 /// title, content, and button labels.
-/// 
+///
 /// Parameters:
 /// - `title`: The title of the dialog (optional).
 /// - `content`: The content or message displayed in the dialog (optional).
@@ -275,7 +266,7 @@ Future showErrorDialog({
 /// - `cancelButtonText`: The text for the cancel button (optional).
 /// - `onConfirm`: A callback function that is executed when the confirm button is pressed (optional).
 /// - `onCancel`: A callback function that is executed when the cancel button is pressed (optional).
-/// 
+///
 /// Returns:
 /// A [Future] that completes when the dialog is dismissed. The result can
 /// indicate whether the user confirmed or canceled the action.
@@ -313,10 +304,10 @@ Future showConfirmDialog({
 );
 
 /// Displays a snackbar with the given message.
-/// 
+///
 /// This function is used to show a temporary notification or message
 /// to the user in the form of a snackbar.
-/// 
+///
 /// [message] The text to be displayed in the snackbar.
 void showSnackBar(String message) {
   final snackBar = SnackBar(
@@ -329,14 +320,23 @@ void showSnackBar(String message) {
 }
 
 /// Returns a formatted string representation of a given `DateTime` object.
-/// 
+///
 /// The formatting style and details are determined by the implementation
 /// of this function. This can be used to display dates and times in a
 /// user-friendly format.
 String getFormattedDateTimeString(
   DateTime dateTime, {
-  String format = 'dd/MM/yyyy hh:mm aa', 
+  String format = 'dd/MM/yyyy hh:mm aa',
 }) {
   final DateFormat formatter = DateFormat(format);
   return formatter.format(dateTime);
+}
+
+String? validateNotEmpty(String? value, {String? fieldName}) {
+  if (value == null || value.trim().isEmpty) {
+    return fieldName != null
+        ? '$fieldName is required.'
+        : 'This field is required.';
+  }
+  return null;
 }
